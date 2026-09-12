@@ -584,7 +584,7 @@ class VoxloomTest {
         // A newer server must not break an older client mid-pipeline.
         assertEquals(JobStatus.QUEUED, JobStatus.fromWire("transmogrifying"));
         assertEquals(FailureKind.UNKNOWN, FailureKind.fromWire("something_new"));
-        assertEquals(Model.AUTO, Model.fromWire("brand_new_model"));
+        assertEquals(Model.WEAVE, Model.fromWire("brand_new_model"));
     }
 
     @Test
@@ -605,23 +605,28 @@ class VoxloomTest {
     }
 
     @Test
-    @DisplayName("model multipliers match the published rates")
+    @DisplayName("a second of audio costs one credit, whichever name is used")
     void multipliers() {
+        // This asserted 1, 2 and 4 for the three tiers. The retired names are
+        // deprecated aliases for the one model, so they cost the same.
+        assertEquals(1, Model.WEAVE.multiplier());
         assertEquals(1, Model.THREAD.multiplier());
-        assertEquals(2, Model.WEAVE.multiplier());
-        assertEquals(4, Model.TAPESTRY.multiplier());
+        assertEquals(1, Model.TAPESTRY.multiplier());
+        assertEquals("weave", Model.TAPESTRY.wire());
     }
 
     @Test
-    @DisplayName("credits convert at the standard rate")
+    @DisplayName("credits convert at one second each")
     void creditConversion() {
-        // 120 credits is one standard minute; dividing by 60 reports double.
-        assertEquals(1.0, Models.creditsToStandardMinutes(120));
-        assertEquals(60.0, Models.creditsToStandardMinutes(7_200));
+        // 60 credits is a minute. It was 120 while three model tiers existed
+        // and figures were quoted at the middle tier's 2x rate, so dividing
+        // by 120 now reports half the minutes a balance is worth.
+        assertEquals(1.0, Models.creditsToStandardMinutes(60));
+        assertEquals(60.0, Models.creditsToStandardMinutes(3_600));
         assertEquals(0.0, Models.creditsToStandardMinutes(-100));
-        assertEquals(120, Models.standardMinutesToCredits(1.0));
-        assertEquals("1m", Models.formatCredits(120));
-        assertEquals("1h 0m", Models.formatCredits(7_200));
+        assertEquals(60, Models.standardMinutesToCredits(1.0));
+        assertEquals("1m", Models.formatCredits(60));
+        assertEquals("1h 0m", Models.formatCredits(3_600));
     }
 
     @Test
@@ -709,7 +714,8 @@ class VoxloomTest {
     @DisplayName("an estimate quotes standard minutes")
     void estimateStandardMinutes() {
         Models.Estimate estimate = new Models.Estimate();
-        estimate.credits = 2_400;
+        // 20 minutes of audio at one credit a second.
+        estimate.credits = 1_200;
         assertEquals(20.0, estimate.standardMinutes());
     }
 

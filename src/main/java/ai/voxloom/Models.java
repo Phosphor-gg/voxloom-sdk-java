@@ -21,13 +21,14 @@ public final class Models {
     public static final long CREDITS_PER_MEDIA_SECOND = 1;
 
     /**
-     * Credits in one standard minute.
+     * Credits in one minute of audio.
      *
-     * <p>Standard minutes are minutes on {@link Model#WEAVE}, the rate every
-     * customer-facing figure is quoted at. Dividing credits by 60 instead
-     * states a balance at Thread's rate and overstates it twofold.
+     * <p>A credit is one second, so this is 60. It was 120 while three model
+     * tiers existed and every customer-facing figure was quoted at the middle
+     * tier's 2x rate; left at 120 it reports half the minutes a balance is
+     * actually worth.
      */
-    public static final long CREDITS_PER_STANDARD_MINUTE = 120;
+    public static final long CREDITS_PER_STANDARD_MINUTE = 60;
 
     /** Credits as the minutes of audio they buy at the standard rate. */
     public static double creditsToStandardMinutes(long credits) {

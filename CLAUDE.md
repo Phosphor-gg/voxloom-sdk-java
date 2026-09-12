@@ -42,7 +42,13 @@ never work".
 `URLEncoder` is form encoding: it turns a space into `+`, which is a literal
 plus in a path. A test asserts `%20`.
 
-**Credits convert at 120 per standard minute.** Dividing by 60 reports double.
+**Credits convert at 60 per minute: a credit is a second of audio.** It was
+120 while three model tiers existed and figures were quoted at the middle
+tier's rate.
+
+**`Model` has one real constant.** AUTO, THREAD and TAPESTRY are deprecated
+aliases so old code compiles; all four serialise to `"weave"` and
+`multiplier()` always returns 1.
 
 **`MIN_POLL_INTERVAL` is 2 seconds and `waitForJob` clamps up to it.** It also
 *stops* rather than polling early when less than a full interval of budget is

@@ -151,13 +151,16 @@ List<Models.Job> jobs = client.allJobs(
 
 ## Units
 
-Credits are not seconds. One second of audio costs one credit at the base rate,
-multiplied by the model (`Model.multiplier()`). Everything customer-facing is
-quoted in **standard minutes**, meaning minutes on Weave, so one standard
-minute is 120 credits.
+One second of audio is one credit, so a minute is 60. There is one model, so
+nothing multiplies that: a credit balance is a length of audio and needs no
+model named to read it.
 
-Use `Models.creditsToStandardMinutes` rather than dividing by 60, which reports
-double.
+It was 120 per minute while three tiers existed and figures were quoted at the
+middle tier's 2x rate. Code still dividing by 120 reports half the minutes a
+balance is worth.
+
+`Models.creditsToStandardMinutes` is the conversion to use; its name is
+historical.
 
 ## Development
 
